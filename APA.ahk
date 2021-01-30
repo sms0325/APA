@@ -7,11 +7,4 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #Include APAManager.ahk
 #Include APAReminder.ahk
 
-TransparentColor = EEAA99
-Gui +LastFound +AlwaysOnTop +ToolWindow
-Gui, Color, %TransparentColor%
-Gui, Font, S72, Arial Black
-Gui, Add, Text,, Hello
-WinSet, TransColor, %TransparentColor%
-Gui -Caption
-Gui, Show
+Reminder("Hello World", 10, 50)
