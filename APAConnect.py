@@ -21,10 +21,14 @@ def connectToSQLite(name, time, snooze, ID = -1):
 
     if (new):
         cur.execute("CREATE TABLE IF NOT EXISTS APATable (Name character(50), ID int, Time timestamp, Snooze integer, Type char)")
-        cur.execute("SELECT TOP 1 * FROM APATable ORDER BY ID DESC")
+        cur.execute("SELECT * FROM APATable WHERE ID=(SELECT max(ID) FROM APATable)")
         row = cur.fetchone()
-        ID = row[0] + 1
-        cur.execute("INSERT INTO APATable (Name, Time, Type) VALUES (?, ?, ?, ?, ?)", (name, ID, time, snooze, 'r'))
+        if (row != None):
+            ID = cur.fetchone() + 1
+        else:
+            ID = 0
+        cur.execute("INSERT INTO APATable (Name, ID, Time, Type, Snooze) VALUES (?, ?, ?, ?, ?)", (name, ID, time, snooze, 'r'))
+        print("New data has been pushed to table!")
         
     else:
         cur.execute("SELECT Time in APATable where Name is equal to (?)", (ID))
@@ -42,12 +46,15 @@ def connectToSQLite(name, time, snooze, ID = -1):
             cur.execute("UPDATE APATable SET Time = (?) WHERE ID = (?)", (time, IDCur))
         #if (typeCur != 'r'):
             #cur.execute("UPDATE APATable SET NAME = (?) WHERE ID = (?)", (, IDCur)) 
+        #what to do about file types?
         if (snooze != snoozeCur):
             cur.execute("UPDATE APATable SET Snooze = (?) WHERE ID = (?)", (snooze, IDCur))
 
         #f = '%Y-%m-%d %H:%M:%S' #timestamp format
 
         #dt.datetime.strptime(timeVal, f)
+
+        print("Data altercation is complete.")
 
     #if timeCur == (typeVal[14:15] + snooze)
         #typeValTemp = 'f' #force on window
