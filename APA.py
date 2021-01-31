@@ -1,4 +1,5 @@
 import tkinter as tk
+from sys import platform
 
 class FloatingWindow():
     def __init__(self, window, grip):
@@ -24,19 +25,26 @@ class FloatingWindow():
         self.window.geometry(f"+{x}+{y}")
 
 
-transparentcolor = "#7d7a00"
-root = tk.Tk()
-# root.overrideredirect(1)
-root.attributes('-topmost', True)
-root.attributes('-transparentcolor', transparentcolor)
-canvas = tk.Canvas(root, width=400, height=200)
-canvas.grid(columnspan=3)
-canvas.configure(bg=transparentcolor)
+if __name__ == "__main__":
+    print(platform)
+    transparentcolor = "#7d7a00"
+    if platform == "darwin":
+        transparentcolor = 'systemTransparent'
+    root = tk.Tk()
+    root.overrideredirect(1)
+    root.attributes('-topmost', True)
+    if platform == "win32":
+        root.attributes('-transparentcolor', transparentcolor)
+    elif platform == "darwin":
+        root.attributes('-transparent', True)
+    canvas = tk.Canvas(root, width=400, height=200, highlightthickness=0)
+    canvas.grid(columnspan=3)
+    canvas.configure(bg=transparentcolor)
 
-cherryBoi = tk.PhotoImage(file='CherryBois/CherryBoi_Surprise.png')
-grip = tk.Label(image=cherryBoi, bg=transparentcolor)
-grip.image = cherryBoi
-grip.grid(column=1, row=0)
-FloatingWindow(root, grip)
-root.mainloop()
+    cherryBoi = tk.PhotoImage(file='CherryBois/CherryBoi_Surprise.png')
+    grip = tk.Label(image=cherryBoi, bg=transparentcolor)
+    grip.image = cherryBoi
+    grip.grid(column=1, row=0)
+    FloatingWindow(root, grip)
+    root.mainloop()
 
