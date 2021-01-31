@@ -1,6 +1,8 @@
 import tkinter as tk
+from tkinter import ttk
 from sys import platform
 import random
+import math
 
 class FloatingWindow():
     def __init__(self, window, grip):
@@ -26,13 +28,13 @@ class FloatingWindow():
         self.window.geometry(f"+{x}+{y}")
 
 class GUIButton():
-    def __init__(self, name, func, style : dict = {}):
+    def __init__(self, name, func):
         self.name = name
         self.func = func
-        self.style = style
 
 class GUIPrompt():
-    def __init__(self, title, confirmBtn : GUIButton, cancelBtn : GUIButton):
+    def __init__(self, master, title, confirmBtn : GUIButton, cancelBtn : GUIButton):
+        self.master = master
         self.title = title
         self.confirmBtn = confirmBtn
         self.cancelBtn = cancelBtn
@@ -51,10 +53,12 @@ class GUIPrompt():
             mascot = 'CherryBois/CherryBoi_Surprise.png'
         
         print(platform)
+        
         transparentcolor = "#7d7a00"
         if platform == "darwin":
             transparentcolor = 'systemTransparent'
-        self.root = tk.Tk()
+
+        self.root = tk.Toplevel(self.master)
         self.root.overrideredirect(1)
         self.root.attributes('-topmost', True)
         if platform == "win32":
@@ -67,26 +71,37 @@ class GUIPrompt():
         grip = tk.Label(self.root, image=cherryBoi, bg=transparentcolor)
         grip.image = cherryBoi
         grip.pack()
-        
+
         backgroundColor = "white"
+        fontStyle = "Calibri"
+        confirmColor = "green"
+        cancelColor = "red"
+
+        style = ttk.Style()
+        style.configure('Title.TLabel', font=(fontStyle, '18', 'bold'), background=backgroundColor)
+        style.configure('Message.TLabel', font=(fontStyle, '13'), background=backgroundColor)
+        style.configure('Confirm.TButton', font=(fontStyle, '12'), bordercolor=confirmColor, borderwidth=4, foreground=confirmColor, background=backgroundColor)
+        style.map('Confirm.TButton', background=[("active", confirmColor)], foreground=[("active", backgroundColor)], font=[("active", (fontStyle, '12', 'bold'))])
+        style.configure('Cancel.TButton', font=(fontStyle, '12'), bordercolor=cancelColor, borderwidth=4, foreground=cancelColor, background=backgroundColor)
+        style.map('Cancel.TButton', background=[("active", cancelColor)], foreground=[("active", backgroundColor)], font=[("active", (fontStyle, '12', 'bold'))])
+
         underMascot = tk.Frame(self.root, bg=backgroundColor, borderwidth=5)
         underMascot.pack(fill=tk.X)
         underMascot.columnconfigure(1, weight=1)
-        promptTitle = tk.Label(underMascot, text=self.title, bg=backgroundColor)
+        promptTitle = ttk.Label(underMascot, text=self.title, wraplength=400, justify=tk.LEFT, style='Title.TLabel')
         promptTitle.grid(column=0, columnspan=3, row=0, padx=10)
-        promtMessage = tk.Label(underMascot, text=message, bg=backgroundColor)
-        promtMessage.grid(column=0, columnspan=3, row=1, padx=10)
-        confirmButton = tk.Button(underMascot, text=self.confirmBtn.name, command=self.confirm, **self.confirmBtn.style)
+        promptMessage = ttk.Label(underMascot, text=message, style='Message.TLabel')
+        promptMessage.grid(column=0, columnspan=3, row=1, padx=10)
+        confirmButton = ttk.Button(underMascot, text=self.confirmBtn.name, command=self.confirm, style='Confirm.TButton')
         confirmButton.grid(column=0, row=3, padx=5)
-        cancelButton = tk.Button(underMascot, text=self.cancelBtn.name, command=self.cancel, **self.cancelBtn.style)
+        cancelButton = ttk.Button(underMascot, text=self.cancelBtn.name, command=self.cancel, style='Cancel.TButton')
         cancelButton.grid(column=2, row=3, padx=5)
 
-        width = self.root.winfo_screenwidth() - self.root.winfo_reqwidth() - 50
-        height = self.root.winfo_screenheight() - self.root.winfo_reqheight() - 50
-        self.root.geometry(f"+{random.randint(0, width)}+{random.randint(0, height)}")
+        width = self.root.winfo_screenwidth() - math.floor(self.root.winfo_reqwidth() * 2)
+        height = self.root.winfo_screenheight() - self.root.winfo_reqheight() - 80
+        self.root.geometry(f"+{width}+{height}")
 
         FloatingWindow(self.root, grip)
-        self.root.mainloop()
     
     def hide(self):
         self.root.destroy()
