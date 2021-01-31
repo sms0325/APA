@@ -14,6 +14,7 @@ class GUIProcessor():
 
     def processIncoming(self):
         while not self.queue.empty():
+            print(self.queue.qsize())
             func = self.queue.get(0)
             func()
 
@@ -70,10 +71,10 @@ class GUIPrompt():
         GUIProcessor.workerThread.apply_async(self.cancelBtn.func)
 
     def show(self, message, mascot = None):
-        def createWindow():
-            if mascot == None:
+        if mascot == None:
                 mascot = 'CherryBois/CherryBoi_Surprise.png'
-            
+
+        def createWindow():
             print(platform)
             
             transparentcolor = "#7d7a00"
