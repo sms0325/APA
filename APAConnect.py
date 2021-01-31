@@ -2,6 +2,8 @@ import tkinter
 import sqlite3
 import APAMAnager
 
+#YYYY-MM-DD hh:mm:ss
+
 def connectToSQLite_new(name, time):
     try: 
         conn = sqlite3.connect('APADatabase.db')
@@ -10,7 +12,7 @@ def connectToSQLite_new(name, time):
         print("Cannot connect to database.")
     cur = conn.cursor()
 
-    cur.execute("CREATE TABLE IF NOT EXISTS APATable (Name character(100), Time timestamp, Type char)")
+    cur.execute("CREATE TABLE IF NOT EXISTS APATable (Name character(50), Time timestamp, Type char)")
     cur.execute("INSERT INTO APATable (Name, Time, Type) VALUES (?, ?, ?)", (name, time, 'r'))
 
     conn.commit()
@@ -20,7 +22,7 @@ def connectToSQLite_new(name, time):
     #this function can be called from APAManager.py, so that way the variables
     #can be passed into here and sent to the database. 
 
-def connectToSQLite(name, time, type):
+def connectToSQLite(name, timeCur, snooze):
     try: 
         conn = sqlite3.connect('APADatabase.db')
         print("Connected!")
@@ -28,7 +30,13 @@ def connectToSQLite(name, time, type):
         print("Cannot connect to database.")
     cur = conn.cursor()
 
-    #if-elif statements for different types
+    #cur.execute("SELECT Time in APATable where Name is equal to (?)", (name))
+
+    #if timeCur == (cur.execute("SELECT SUBSTRING(Time, 14, 15) in APATable where Name is equal to (?)", (name)) + snooze)
+        #typeValTemp = 'f' #force on window
+    # this doesn't work??
+    # how do you validate a database then??? like what lol
+
         #cur.execute("INSERT INTO APATable (Name, Time, Type) VALUES (?, ?, ?)", (name, time, 'r'))
         #different executions depending on context
 
