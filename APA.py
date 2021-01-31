@@ -5,8 +5,8 @@ import asyncio
 
 rems = []
 
-rems.append(Reminder("Finish modules",1,"r"))
-rems.append(Reminder("Read textbook",1,"r"))
+rems.append(Reminder("Finish modules",1))
+rems.append(Reminder("Read textbook",1))
 
 async def main():
     await asyncio.gather(rems[0].start(), rems[1].start())

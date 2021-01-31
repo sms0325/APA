@@ -26,7 +26,7 @@ from APAGraphics import GUIButton, GUIPrompt
         print("Snoozed")'''
 
 class Reminder:
-    def __init__(self, title, snooze, rtype, window=""):
+    def __init__(self, title, snooze):
         self.title = title
         self.snooze = snooze
         self.rtype = rtype
