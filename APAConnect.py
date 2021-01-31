@@ -28,6 +28,7 @@ def connectToSQLite(name, time, snooze, ID = -1):
         else:
             ID = 0
         cur.execute("INSERT INTO APATable (Name, ID, Time, Type, Snooze) VALUES (?, ?, ?, ?, ?)", (name, ID, time, snooze, 'r'))
+        conn.commit()
         print("New data has been pushed to table!")
         
     else:
@@ -42,13 +43,16 @@ def connectToSQLite(name, time, snooze, ID = -1):
 
         if (name != nameCur):
             cur.execute("UPDATE APATable SET Name = (?) WHERE ID = (?)", (name, ID))
+            conn.commit()
         if (time != timeCur):
             cur.execute("UPDATE APATable SET Time = (?) WHERE ID = (?)", (time, IDCur))
+            conn.commit()
         #if (typeCur != 'r'):
             #cur.execute("UPDATE APATable SET NAME = (?) WHERE ID = (?)", (, IDCur)) 
         #what to do about file types?
         if (snooze != snoozeCur):
             cur.execute("UPDATE APATable SET Snooze = (?) WHERE ID = (?)", (snooze, IDCur))
+            conn.commit()
 
         #f = '%Y-%m-%d %H:%M:%S' #timestamp format
 
@@ -63,6 +67,20 @@ def connectToSQLite(name, time, snooze, ID = -1):
         #different executions depending on context
 
     #should certain commands indicate to go back to APAManager and trigger something?
+
+    cur.close()
+    conn.close()
+
+def deleteRow(name):
+    try: 
+        conn = sqlite3.connect('APADatabase.db')
+        print("Connected!")
+    except:
+        print("Cannot connect to database.")
+    cur = conn.cursor()
+
+    cur.execute("UPDATE APATable DROP ROWS WHERE Name = (?)", (name))
+    conn.commit()
 
     cur.close()
     conn.close()
