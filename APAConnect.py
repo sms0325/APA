@@ -3,9 +3,9 @@ import psycopg2
 import APA
 
 def setup():
-    name = 
+    name = "TestName"
         #enter name of file here
-    time =
+    time = 65137085
         #in milliseconds
     #default value for type is reminder (r)
 
@@ -20,12 +20,12 @@ def connectToPostgres_new():
     cur = conn.cursor()
 
     name, time = setup()
-    cur = connectToPostgres()
 
-    cur.execute("INSERT INTO APADatabaseTable (name, time, type) VALUES (%s, %s, %s)", (name, time, 'r'))
-
+    cur.execute("CREATE TABLE APATable (Name character(50), Time int, Type char)")
+    cur.execute("INSERT INTO APATable (Name, Time, Type) VALUES (%s, %s, %s)", (name, time, 'r'))
     conn.commit()
-
     cur.close()
     conn.close()
 
+if __name__ == "__main__":
+    connectToPostgres_new()
