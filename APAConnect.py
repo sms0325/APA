@@ -30,12 +30,15 @@ def connectToSQLite(name, timeCur, snooze):
         print("Cannot connect to database.")
     cur = conn.cursor()
 
-    #cur.execute("SELECT Time in APATable where Name is equal to (?)", (name))
+    cur.execute("SELECT Time in APATable where Name is equal to (?)", (name))
+    row = cur.fetchone()
 
-    #if timeCur == (cur.execute("SELECT SUBSTRING(Time, 14, 15) in APATable where Name is equal to (?)", (name)) + snooze)
+    name = row[0]
+    timeVal = row[1]
+    typeVal = row[2]
+
+    #if timeCur == (typeVal[14:15] + snooze)
         #typeValTemp = 'f' #force on window
-    # this doesn't work??
-    # how do you validate a database then??? like what lol
 
         #cur.execute("INSERT INTO APATable (Name, Time, Type) VALUES (?, ?, ?)", (name, time, 'r'))
         #different executions depending on context
