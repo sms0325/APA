@@ -2,17 +2,22 @@ from APAGraphics import GUIButton, GUIPrompt
 from APAReminder import *
 import time
 import asyncio
+import tkinter as tk
+
+root = tk.Tk()
 
 rems = []
 
-rems.append(Reminder("Finish modules",1))
-rems.append(Reminder("Read textbook",1))
+rems.append(Reminder(root,"Finish modules",1))
+rems.append(Reminder(root,"Read textbook",1))
 
 async def main():
-    await asyncio.gather(rems[0].start(), rems[1].start())
+    for r in rems:
+        asyncio.ensure_future(r.start())
 
-'''loop = asyncio.get_event_loop()
-loop.run_until_complete(main(loop))
-loop.close()'''
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
+pending = asyncio.all_tasks()
+loop.run_until_complete(asyncio.gather(*pending))
 
-asyncio.run(main())
+root.mainloop()
