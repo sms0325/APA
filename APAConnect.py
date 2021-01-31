@@ -6,27 +6,8 @@ import APAManager
 
 #YYYY-MM-DD hh:mm:ss
 
-# def connectToSQLite_new(name, timeCur, snooze):
-#     try: 
-#         conn = sqlite3.connect('APADatabase.db')
-#         print("Connected!")
-#     except:
-#         print("Cannot connect to database.")
-#     cur = conn.cursor()
-
-#     cur.execute("CREATE TABLE IF NOT EXISTS APATable (Name character(50), ID integer, Time timestamp, Snooze integer, Type char)")
-#     ID = 
-#     cur.execute("INSERT INTO APATable (Name, Time, Type) VALUES (?, ?, ?, ?, ?)", (name, ID, timeCur, snooze, 'r'))
-
-#     conn.commit()
-#     cur.close()
-#     conn.close()
-
-#     #this function can be called from APAManager.py, so that way the variables
-#     #can be passed into here and sent to the database. 
-
 #connecting to existing data and altering
-def connectToSQLite(name, timeCur, snooze, ID = -1): 
+def connectToSQLite(name, time, snooze, ID = -1): 
     new = True
     if (ID != -1):
         new = False
@@ -43,20 +24,30 @@ def connectToSQLite(name, timeCur, snooze, ID = -1):
         cur.execute("SELECT TOP 1 * FROM APATable ORDER BY ID DESC")
         row = cur.fetchone()
         ID = row[0] + 1
-        cur.execute("INSERT INTO APATable (Name, Time, Type) VALUES (?, ?, ?, ?, ?)", (name, ID, timeCur, snooze, 'r'))
+        cur.execute("INSERT INTO APATable (Name, Time, Type) VALUES (?, ?, ?, ?, ?)", (name, ID, time, snooze, 'r'))
         
     else:
-        cur.execute("SELECT Time in APATable where Name is equal to (?)", (name))
+        cur.execute("SELECT Time in APATable where Name is equal to (?)", (ID))
         row = cur.fetchone()
 
-        name = row[0]
-        timeVal = row[1]
-        print(timeVal)
-        typeVal = row[2]
+        nameCur = row[0]
+        IDCur = row[1]
+        timeCur = row[2]
+        typeCur = row[3]
+        snoozeCur = row[4]
 
-        f = '%Y-%m-%d %H:%M:%S' #timestamp format
+        if (name != nameCur):
+            cur.execute("UPDATE APATable SET Name = (?) WHERE ID = (?)", (name, ID))
+        if (time != timeCur):
+            cur.execute("UPDATE APATable SET Time = (?) WHERE ID = (?)", (time, IDCur))
+        #if (typeCur != 'r'):
+            #cur.execute("UPDATE APATable SET NAME = (?) WHERE ID = (?)", (, IDCur)) 
+        if (snooze != snoozeCur):
+            cur.execute("UPDATE APATable SET Snooze = (?) WHERE ID = (?)", (snooze, IDCur))
 
-        dt.datetime.strptime(timeVal, f)
+        #f = '%Y-%m-%d %H:%M:%S' #timestamp format
+
+        #dt.datetime.strptime(timeVal, f)
 
     #if timeCur == (typeVal[14:15] + snooze)
         #typeValTemp = 'f' #force on window

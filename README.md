@@ -12,4 +12,6 @@ SQL data types: https://www.w3schools.com/sql/sql_datatypes.asp
 
 Setting up SQLite server: https://flaviocopes.com/sqlite-how-to-install/
 
+SQLite documentation: https://docs.python.org/3/library/sqlite3.html
+
 Cherry boi drawings made by Ymai Nguyen. 
