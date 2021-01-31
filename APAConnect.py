@@ -1,6 +1,6 @@
 import tkinter
 import psycopg2
-import APA
+#import APA
 
 def setup():
     name = "TestName"
@@ -21,8 +21,9 @@ def connectToPostgres_new():
 
     name, time = setup()
 
-    cur.execute("CREATE TABLE APATable (Name character(50), Time int, Type char)")
+    #cur.execute("CREATE TABLE APATable (Name character(100), Time int, Type char)")
     cur.execute("INSERT INTO APATable (Name, Time, Type) VALUES (%s, %s, %s)", (name, time, 'r'))
+
     conn.commit()
     cur.close()
     conn.close()
