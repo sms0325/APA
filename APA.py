@@ -1,4 +1,4 @@
-from APAGraphics import GUIButton, GUIPrompt, GUIProcessor
+from APAGraphics import GUIButton, GUIPrompt, GUIProcessor, GUIMascot
 from APAReminder import *
 import time
 import asyncio
@@ -7,19 +7,19 @@ from tkinter import ttk
 from multiprocessing import dummy as multithreading
 import queue
 
+mascot = GUIMascot()
+root = mascot.root
+style = ttk.Style()
+style.theme_use('clam')
+
 rems = []
 
 queue = queue.Queue()
 
-root = tk.Tk()
-style = ttk.Style()
-style.theme_use('clam')
-
 processor = GUIProcessor(root,queue)
 
-rems.append(Reminder(root,"Finish modules",1,queue))
+rems.append(Reminder(root,"Finish modules",0.2,queue))
 rems.append(Reminder(root,"Read textbook",1,queue))
-
 
 def WorkerThread():
     async def tasks():
@@ -40,5 +40,4 @@ pool.apply_async(WorkerThread)
 processor.periodicCall()
 root.mainloop()
 
-pool.close()
-pool.join()
+pool.terminate()

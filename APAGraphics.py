@@ -1,3 +1,4 @@
+from APAManager import AddReminder
 import tkinter as tk
 from tkinter import ttk
 from sys import platform
@@ -74,7 +75,7 @@ class GUIPrompt():
 
     def show(self, message, mascot = None):
         if mascot == None:
-                mascot = 'CherryBois/CherryBoi_Surprise.png'
+            mascot = 'CherryBois/CherryBoi_Surprise.png'
 
         def createWindow():
             print(platform)
@@ -131,4 +132,53 @@ class GUIPrompt():
         return createWindow
     
     def hide(self):
+        self.root.destroy()
+
+class GUIMascot():
+    def __init__(self, mascot = None):
+        self.mascot = mascot
+        if self.mascot == None:
+            self.mascot = 'CherryBois/CherryBoi_Sleepy.png'
+
+        transparentcolor = "#7d7a00"
+        backgroundColor = "white"
+        addColor = "blue"
+        exitColor = "gray"
+        fontStyle = "Calibri"
+
+        self.root = tk.Tk()
+        self.root.overrideredirect(1)
+        self.root.attributes('-topmost', True)
+        if platform == "win32":
+            self.root.attributes('-transparentcolor', transparentcolor)
+        elif platform == "darwin":
+            self.root.attributes('-transparent', True)
+        self.root.configure(bg=transparentcolor)
+        
+        cherryBoi = tk.PhotoImage(file=self.mascot)
+        self.grip = tk.Label(self.root, image=cherryBoi, bg=transparentcolor)
+        self.grip.image = cherryBoi
+        self.grip.pack()
+        FloatingWindow(self.root, self.grip)
+        width = self.root.winfo_screenwidth() - self.root.winfo_reqwidth()
+        height = self.root.winfo_screenheight() - self.root.winfo_reqheight()
+        self.root.geometry(f"+{width}+{height}")
+
+        underMascot = tk.Frame(self.root, bg=backgroundColor, borderwidth=5)
+        underMascot.pack(fill=tk.X)
+        underMascot.columnconfigure(1, weight=1)
+        style = ttk.Style()
+        style.configure('Add.TButton', font=(fontStyle, '12'), bordercolor=addColor, borderwidth=4, foreground=addColor, background=backgroundColor)
+        style.map('Add.TButton', background=[("active", addColor)], foreground=[("active", backgroundColor)], font=[("active", (fontStyle, '12', 'bold'))])
+        style.configure('Exit.TButton', font=(fontStyle, '12'), bordercolor=exitColor, borderwidth=4, foreground=exitColor, background=backgroundColor)
+        style.map('Exit.TButton', background=[("active", exitColor)], foreground=[("active", backgroundColor)], font=[("active", (fontStyle, '12', 'bold'))])
+        addBtn = ttk.Button(underMascot, text="Add Reminder", command=self.createAddReminder, style='Add.TButton')
+        addBtn.grid(column=0, row=0, padx=5)
+        exitBtn = ttk.Button(underMascot, text="exit", command=self.exitAPA, style='Exit.TButton')
+        exitBtn.grid(column=1, row=0, padx=5)
+
+    def createAddReminder(self):
+        add = AddReminder(self.root)
+
+    def exitAPA(self):
         self.root.destroy()

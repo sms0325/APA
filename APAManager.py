@@ -7,7 +7,8 @@ from datetime import datetime
 from APAConnect import *
 
 class AddReminder:
-	def __init__(self):
+	def __init__(self, master):
+		self.master = master
 		self.window = None
 		self.nameField = None
 		self.timeDateField = None
@@ -69,7 +70,7 @@ class AddReminder:
 		return False
 	
 	def openAddWindow(self):
-		self.window = tk.Tk()
+		self.window = tk.Toplevel(self.master)
 		self.window.title("Add Reminder")
 		
 		# reminder name
@@ -122,7 +123,3 @@ class AddReminder:
 
 		self.confirmation = tk.Label(self.window, text = "")
 		self.confirmation.grid(row = 9, column = 0, columnspan = 4)
-
-		self.window.mainloop()
-
-add = AddReminder()
