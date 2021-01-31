@@ -3,6 +3,8 @@ from tkinter import ttk
 import tkcalendar as tkc
 from datetime import date
 
+from APAConnect import *
+
 def addReminderButton():
 	name = nameField.get()
 	time = str(timeDateField.selection_get())
@@ -11,6 +13,8 @@ def addReminderButton():
 	print("Name:", name)
 	print("Time:", time)
 	print("Snooze:", snooze)
+
+	connectToSQLite(name, time, snooze)
 	# TODO: this function should probably pass/return name, time, snooze to some other function
 	# and close this window
 
