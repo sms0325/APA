@@ -51,11 +51,11 @@ class GUIPrompt():
 
     def confirm(self):
         self.hide()
-        GUIProcessor.workerThread.submit(self.confirmBtn.func)
+        GUIProcessor.workerThread.apply_async(self.confirmBtn.func)
     
     def cancel(self):
         self.hide()
-        GUIProcessor.workerThread.submit(self.cancelBtn.func)
+        GUIProcessor.workerThread.apply_async(self.cancelBtn.func)
 
     def show(self, message, mascot = None):
         def createWindow():
