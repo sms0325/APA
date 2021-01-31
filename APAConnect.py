@@ -62,12 +62,6 @@ def connectToSQLite(name, time, snooze, ID = -1):
 
         print("Data altercation is complete.")
 
-    #if timeCur == (typeVal[14:15] + snooze)
-        #typeValTemp = 'f' #force on window
-
-        #cur.execute("INSERT INTO APATable (Name, Time, Type) VALUES (?, ?, ?)", (name, time, 'r'))
-        #different executions depending on context
-
     #should certain commands indicate to go back to APAManager and trigger something?
 
     cur.close()
