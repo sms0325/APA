@@ -3,12 +3,9 @@ tamuHACK 2021 Project - Dell's prompt (APA: Aggressive Personal Assistant)
 
 
 
-<u>References:</u>
+<u>References/Sources:</u>
 
-AutoHotKey GIF usage:
-
-- https://www.autohotkey.com/boards/viewtopic.php?t=23274
-- https://autohotkey.com/board/topic/61388-transparent-gui/
-- https://www.autohotkey.com/boards/viewtopic.php?f=6&t=35199
+Transparent tkinter background: 
+    https://stackoverflow.com/questions/19080499/transparent-background-in-a-tkinter-window
 
 Cherry boi drawings made by Ymai Nguyen. 
