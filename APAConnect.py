@@ -1,10 +1,18 @@
-import tkinter
+import tkinter as tk
 import sqlite3
-import APAMAnager
+import datetime as dt
+
+import APAManager
 
 #YYYY-MM-DD hh:mm:ss
 
-def connectToSQLite_new(name, time):
+#ID value not contained: entering new data
+#ID value contained: altering existing data
+def connectToSQLite(name, time, snooze, ID = -1): 
+    new = True
+    if (ID != -1):
+        new = False
+    
     try: 
         conn = sqlite3.connect('APADatabase.db')
         print("Connected!")
@@ -12,30 +20,47 @@ def connectToSQLite_new(name, time):
         print("Cannot connect to database.")
     cur = conn.cursor()
 
-    cur.execute("CREATE TABLE IF NOT EXISTS APATable (Name character(50), Time timestamp, Type char)")
-    cur.execute("INSERT INTO APATable (Name, Time, Type) VALUES (?, ?, ?)", (name, time, 'r'))
+    if (new):
+        cur.execute("CREATE TABLE IF NOT EXISTS APATable (Name character(50), ID int, Time timestamp, Snooze integer, Type char)")
+        cur.execute("SELECT * FROM APATable WHERE ID=(SELECT max(ID) FROM APATable)")
+        row = cur.fetchone()
+        if (row != None):
+            ID = cur.fetchone() + 1
+        else:
+            ID = 0
+        cur.execute("INSERT INTO APATable (Name, ID, Time, Type, Snooze) VALUES (?, ?, ?, ?, ?)", (name, ID, time, snooze, 'r'))
+        conn.commit()
+        print("New data has been pushed to table!")
+        
+    else:
+        cur.execute("SELECT Time in APATable where Name is equal to (?)", (ID))
+        conn.commit()
+        row = cur.fetchone()
 
-    conn.commit()
-    cur.close()
-    conn.close()
+        nameCur = row[0]
+        IDCur = row[1]
+        timeCur = row[2]
+        typeCur = row[3]
+        snoozeCur = row[4]
 
-    #this function can be called from APAManager.py, so that way the variables
-    #can be passed into here and sent to the database. 
+        if (name != nameCur):
+            cur.execute("UPDATE APATable SET Name = (?) WHERE ID = (?)", (name, ID))
+            conn.commit()
+        if (time != timeCur):
+            cur.execute("UPDATE APATable SET Time = (?) WHERE ID = (?)", (time, IDCur))
+            conn.commit()
+        #if (typeCur != 'r'):
+            #cur.execute("UPDATE APATable SET NAME = (?) WHERE ID = (?)", (, IDCur)) 
+        #what to do about file types?
+        if (snooze != snoozeCur):
+            cur.execute("UPDATE APATable SET Snooze = (?) WHERE ID = (?)", (snooze, IDCur))
+            conn.commit()
 
-def connectToSQLite(name, timeCur, snooze):
-    try: 
-        conn = sqlite3.connect('APADatabase.db')
-        print("Connected!")
-    except:
-        print("Cannot connect to database.")
-    cur = conn.cursor()
+        #f = '%Y-%m-%d %H:%M:%S' #timestamp format
 
-    cur.execute("SELECT Time in APATable where Name is equal to (?)", (name))
-    row = cur.fetchone()
+        #dt.datetime.strptime(timeVal, f)
 
-    name = row[0]
-    timeVal = row[1]
-    typeVal = row[2]
+        print("Data altercation is complete.")
 
     #if timeCur == (typeVal[14:15] + snooze)
         #typeValTemp = 'f' #force on window
@@ -44,6 +69,46 @@ def connectToSQLite(name, timeCur, snooze):
         #different executions depending on context
 
     #should certain commands indicate to go back to APAManager and trigger something?
+
+    cur.close()
+    conn.close()
+
+def PrintTable(ID):
+    try: 
+        conn = sqlite3.connect('APADatabase.db')
+        print("Connected!")
+    except:
+        print("Cannot connect to database.")
+    cur = conn.cursor()
+
+    cur.execute("SELECT * FROM APATable")
+    conn.commit()
+
+    cur.execute("SELECT Time FROM APATable where Name is equal to (?)", (ID))
+    conn.commit()
+    row = cur.fetchall()
+
+    for i in row:
+        nameCur = row[0 + i]
+        IDCur = row[1 + i]
+        timeCur = row[2 + i]
+        typeCur = row[3 + i]
+        snoozeCur = row[4 + i]
+        print("Data for row " + IDCur + ": Name: " + nameCur + ", Time of reminder: " + timeCur + ", Reminder type: " + typeCur + ", Snooze time set: " + snoozeCur)
+
+    cur.close()
+    conn.close()
+
+def deleteRow(name):
+    try: 
+        conn = sqlite3.connect('APADatabase.db')
+        print("Connected!")
+    except:
+        print("Cannot connect to database.")
+    cur = conn.cursor()
+
+    cur.execute("UPDATE APATable DROP ROWS WHERE Name = (?)", (name))
+    conn.commit()
 
     cur.close()
     conn.close()
