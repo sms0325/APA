@@ -37,8 +37,11 @@ def connectToSQLite(name, time, snooze, ID = -1):
             return True
         except: 
             print("Can't push to table, please try again.")
+            cur.close()
+            conn.close()
             return False
         
+    success = False
     else:
         cur.execute("SELECT Time in APATable where Name is equal to (?)", (ID))
         conn.commit()
@@ -49,7 +52,6 @@ def connectToSQLite(name, time, snooze, ID = -1):
         timeCur = row[2]
         snoozeCur = row[4]
 
-        success = False
         if (name != nameCur):
             try:
                 cur.execute("UPDATE APATable SET Name = (?) WHERE ID = (?)", (name, ID))
@@ -58,6 +60,8 @@ def connectToSQLite(name, time, snooze, ID = -1):
                 success = True
             except:
                 print("Change failed.")
+                cur.close()
+                conn.close()
                 return False
         if (time != timeCur):
             try:
@@ -67,6 +71,8 @@ def connectToSQLite(name, time, snooze, ID = -1):
                 success = True
             except:
                 print("Change failed.")
+                cur.close()
+                conn.close()
                 return False
         if (snooze != snoozeCur):
             try:
@@ -76,19 +82,16 @@ def connectToSQLite(name, time, snooze, ID = -1):
                 success = True
             except:
                 print("Change failed.")
+                cur.close()
+                conn.close()
                 return False
-        return success
-
-        #f = '%Y-%m-%d %H:%M:%S' #timestamp format
-
-        #dt.datetime.strptime(timeVal, f)
-
         print("Data altercation is complete.")
 
-    #should certain commands indicate to go back to APAManager and trigger something?
-
+        #f = '%Y-%m-%d %H:%M:%S' #timestamp format
+        #dt.datetime.strptime(timeVal, f)
     cur.close()
     conn.close()
+    return success
 
 def PrintTable(ID):
     try: 
@@ -135,6 +138,8 @@ def deleteRow(name):
         conn.commit()
     except:
         print("Uh oh, deletion check failed.")
+        cur.close()
+        conn.close()
         return False
 
     cur.close()
