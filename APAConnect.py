@@ -11,7 +11,7 @@ def setup():
 
     return name, time
 
-def connectToPostgres():
+def connectToPostgres_new():
     try: 
         conn = psycopg2.connect(database="APA", user="postgres", password="He4rty6452!", host="localhost")
         print("Connected!")
@@ -20,6 +20,7 @@ def connectToPostgres():
     cur = conn.cursor()
 
     name, time = setup()
+    cur = connectToPostgres()
 
     cur.execute("INSERT INTO APADatabaseTable (name, time, type) VALUES (%s, %s, %s)", (name, time, 'r'))
 
