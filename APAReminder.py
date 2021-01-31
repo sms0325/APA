@@ -1,6 +1,6 @@
 import time
 class Reminder:
-    def __init__(self, title,snooze,rtype,window=""):
+    def __init__(self, title, snooze, rtype, window=""):
         self.title = title
         self.snooze = snooze
         self.rtype = rtype
@@ -11,5 +11,5 @@ class Reminder:
     def yes():
         self.done = True
 
-    def snz()
+    def snz():
         time.sleep(snooze * 60)
