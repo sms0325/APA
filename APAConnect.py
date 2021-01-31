@@ -28,9 +28,13 @@ def connectToSQLite(name, time, snooze, ID = -1):
             ID = cur.fetchone() + 1
         else:
             ID = 0
-        cur.execute("INSERT INTO APATable (Name, ID, Time, Snooze) VALUES (?, ?, ?, ?)", (name, ID, time, snooze))
-        conn.commit()
-        print("New data has been pushed to table!")
+        
+        try:
+            cur.execute("INSERT INTO APATable (Name, ID, Time, Snooze) VALUES (?, ?, ?, ?)", (name, ID, time, snooze))
+            conn.commit()
+            print("New data has been pushed to table!")
+        except: 
+            print("Can't push to table, please try again.")
         
     else:
         cur.execute("SELECT Time in APATable where Name is equal to (?)", (ID))
