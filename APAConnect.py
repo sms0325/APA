@@ -107,5 +107,8 @@ def deleteRow(name):
     cur.execute("UPDATE APATable DROP ROWS WHERE Name = (?)", (name))
     conn.commit()
 
+    cur.execture("delete from APATable where Time < NOW()")
+    conn.commit()
+
     cur.close()
     conn.close()
