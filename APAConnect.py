@@ -21,6 +21,8 @@ def connectToSQLite(name, time, snooze, ID = -1):
         return False
     cur = conn.cursor()
 
+    success = False
+
     if (new):
         cur.execute("CREATE TABLE IF NOT EXISTS APATable (Name character(50), ID int, Time timestamp, Snooze integer)")
         cur.execute("SELECT * FROM APATable WHERE ID=(SELECT max(ID) FROM APATable)")
@@ -41,7 +43,6 @@ def connectToSQLite(name, time, snooze, ID = -1):
             conn.close()
             return False
         
-    success = False
     else:
         cur.execute("SELECT Time in APATable where Name is equal to (?)", (ID))
         conn.commit()
