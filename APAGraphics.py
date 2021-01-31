@@ -3,20 +3,17 @@ from tkinter import ttk
 from sys import platform
 import random
 import math
+import queue
 
 class GUIProcessor():
     workerThread = None
     def __init__(self, queue):
         self.queue = queue
-        self.running = 1
 
     def processIncoming(self):
-        while self.running:
-            func = self.queue.get(block=True)
+        while not self.queue.empty():
+            func = self.queue.get(0)
             func()
-
-    def __del__(self):
-        self.running = 0
 
 class FloatingWindow():
     def __init__(self, window, grip):
