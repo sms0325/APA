@@ -8,10 +8,15 @@ class GUIProcessor():
     workerThread = None
     def __init__(self, queue):
         self.queue = queue
+        self.running = 1
 
     def processIncoming(self):
-        while (func = self.queue.get(block=True)) != None:
+        while self.running:
+            func = self.queue.get(block=True)
             func()
+
+    def __del__(self):
+        self.running = 0
 
 class FloatingWindow():
     def __init__(self, window, grip):
