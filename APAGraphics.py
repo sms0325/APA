@@ -4,9 +4,11 @@ from sys import platform
 import random
 import math
 import queue
+import asyncio
+import inspect
 
 class GUIProcessor():
-    workerThread = None
+    workerLoop = None
     def __init__(self, master, queue):
         self.master = master
         self.queue = queue
@@ -64,11 +66,11 @@ class GUIPrompt():
 
     def confirm(self):
         self.hide()
-        GUIProcessor.workerThread.apply_async(self.confirmBtn.func)
+        asyncio.run_coroutine_threadsafe(self.confirmBtn.func(), GUIProcessor.workerLoop) if asyncio.iscoroutinefunction(self.confirmBtn.func) else self.confirmBtn.func()
     
     def cancel(self):
         self.hide()
-        GUIProcessor.workerThread.apply_async(self.cancelBtn.func)
+        asyncio.run_coroutine_threadsafe(self.cancelBtn.func(), GUIProcessor.workerLoop) if asyncio.iscoroutinefunction(self.cancelBtn.func) else self.cancelBtn.func()
 
     def show(self, message, mascot = None):
         if mascot == None:

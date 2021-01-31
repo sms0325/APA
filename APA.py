@@ -27,8 +27,7 @@ def WorkerThread():
             asyncio.ensure_future(r.start())
         print("End of tasks")
     loop = asyncio.new_event_loop()
-
-
+    GUIProcessor.workerLoop = loop
     try:
         loop.run_until_complete(tasks())
         loop.run_forever()
@@ -37,7 +36,6 @@ def WorkerThread():
 
 pool = multithreading.Pool(1)
 pool.apply_async(WorkerThread)
-GUIProcessor.workerThread = pool
 
 processor.periodicCall()
 root.mainloop()
