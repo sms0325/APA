@@ -18,6 +18,7 @@ def connectToSQLite(name, time, snooze, ID = -1):
         print("Connected!")
     except:
         print("Cannot connect to database.")
+        return False
     cur = conn.cursor()
 
     if (new):
@@ -33,8 +34,10 @@ def connectToSQLite(name, time, snooze, ID = -1):
             cur.execute("INSERT INTO APATable (Name, ID, Time, Snooze) VALUES (?, ?, ?, ?)", (name, ID, time, snooze))
             conn.commit()
             print("New data has been pushed to table!")
+            return True
         except: 
             print("Can't push to table, please try again.")
+            return False
         
     else:
         cur.execute("SELECT Time in APATable where Name is equal to (?)", (ID))
@@ -46,15 +49,35 @@ def connectToSQLite(name, time, snooze, ID = -1):
         timeCur = row[2]
         snoozeCur = row[4]
 
+        success = False
         if (name != nameCur):
-            cur.execute("UPDATE APATable SET Name = (?) WHERE ID = (?)", (name, ID))
-            conn.commit()
+            try:
+                cur.execute("UPDATE APATable SET Name = (?) WHERE ID = (?)", (name, ID))
+                conn.commit()
+                print("Change sucessfully made.")
+                success = True
+            except:
+                print("Change failed.")
+                return False
         if (time != timeCur):
-            cur.execute("UPDATE APATable SET Time = (?) WHERE ID = (?)", (time, IDCur))
-            conn.commit()
+            try:
+                cur.execute("UPDATE APATable SET Time = (?) WHERE ID = (?)", (time, IDCur))
+                conn.commit()
+                print("Change sucessfully made.")
+                success = True
+            except:
+                print("Change failed.")
+                return False
         if (snooze != snoozeCur):
-            cur.execute("UPDATE APATable SET Snooze = (?) WHERE ID = (?)", (snooze, IDCur))
-            conn.commit()
+            try:
+                cur.execute("UPDATE APATable SET Snooze = (?) WHERE ID = (?)", (snooze, IDCur))
+                conn.commit()
+                print("Change sucessfully made.")
+                success = True
+            except:
+                print("Change failed.")
+                return False
+        return success
 
         #f = '%Y-%m-%d %H:%M:%S' #timestamp format
 
@@ -73,6 +96,7 @@ def PrintTable(ID):
         print("Connected!")
     except:
         print("Cannot connect to database.")
+        return False
     cur = conn.cursor()
 
     cur.execute("SELECT * FROM APATable")
@@ -93,6 +117,7 @@ def PrintTable(ID):
 
     cur.close()
     conn.close()
+    return True
 
 def deleteRow(name):
     try: 
@@ -100,13 +125,17 @@ def deleteRow(name):
         print("Connected!")
     except:
         print("Cannot connect to database.")
+        return False
     cur = conn.cursor()
 
-    cur.execute("UPDATE APATable DROP ROWS WHERE Name = (?)", (name))
-    conn.commit()
-
-    cur.execture("delete from APATable where Time < NOW()")
-    conn.commit()
+    try:
+        cur.execute("UPDATE APATable DROP ROWS WHERE Name = (?)", (name))
+        conn.commit()
+        cur.execture("delete from APATable where Time < NOW()")
+        conn.commit()
+    except:
+        print("Uh oh, deletion check failed.")
+        return False
 
     cur.close()
     conn.close()
