@@ -1,13 +1,18 @@
 from APAGraphics import GUIButton, GUIPrompt
 from APAReminder import *
 import time
+import asyncio
 
-rem = Reminder("Work on code", 1,"r")
+rems = []
 
-yes = GUIButton("Yes", lambda: rem.yes())
-snz = GUIButton("Snooze", lambda: rem.snz())
-gui = GUIPrompt("Hello", yes, snz)
-gui.show("hello hello")
+rems.append(Reminder("Finish modules",1,"r"))
+rems.append(Reminder("Read textbook",1,"r"))
 
-time.sleep(2)
-gui.show("new prompt")
+async def main():
+    await asyncio.gather(rems[0].start(), rems[1].start())
+
+'''loop = asyncio.get_event_loop()
+loop.run_until_complete(main(loop))
+loop.close()'''
+
+asyncio.run(main())
