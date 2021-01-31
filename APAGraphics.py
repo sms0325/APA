@@ -7,13 +7,23 @@ import queue
 
 class GUIProcessor():
     workerThread = None
-    def __init__(self, queue):
+    def __init__(self, master, queue):
+        self.master = master
         self.queue = queue
+        self.running = 1
 
     def processIncoming(self):
         while not self.queue.empty():
             func = self.queue.get(0)
             func()
+
+    def __del__(self):
+        self.running = 0
+
+    def periodicCall(self):
+        self.processIncoming()
+        if self.running:
+            self.master.after(200, self.periodicCall)
 
 class FloatingWindow():
     def __init__(self, window, grip):
