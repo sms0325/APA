@@ -6,7 +6,8 @@ import APAManager
 
 #YYYY-MM-DD hh:mm:ss
 
-#connecting to existing data and altering
+#ID value not contained: entering new data
+#ID value contained: altering existing data
 def connectToSQLite(name, time, snooze, ID = -1): 
     new = True
     if (ID != -1):
@@ -33,6 +34,7 @@ def connectToSQLite(name, time, snooze, ID = -1):
         
     else:
         cur.execute("SELECT Time in APATable where Name is equal to (?)", (ID))
+        conn.commit()
         row = cur.fetchone()
 
         nameCur = row[0]
@@ -67,6 +69,32 @@ def connectToSQLite(name, time, snooze, ID = -1):
         #different executions depending on context
 
     #should certain commands indicate to go back to APAManager and trigger something?
+
+    cur.close()
+    conn.close()
+
+def PrintTable(ID):
+    try: 
+        conn = sqlite3.connect('APADatabase.db')
+        print("Connected!")
+    except:
+        print("Cannot connect to database.")
+    cur = conn.cursor()
+
+    cur.execute("SELECT * FROM APATable")
+    conn.commit()
+
+    cur.execute("SELECT Time FROM APATable where Name is equal to (?)", (ID))
+    conn.commit()
+    row = cur.fetchall()
+
+    for i in row:
+        nameCur = row[0 + i]
+        IDCur = row[1 + i]
+        timeCur = row[2 + i]
+        typeCur = row[3 + i]
+        snoozeCur = row[4 + i]
+        print("Data for row " + IDCur + ": Name: " + nameCur + ", Time of reminder: " + timeCur + ", Reminder type: " + typeCur + ", Snooze time set: " + snoozeCur)
 
     cur.close()
     conn.close()
