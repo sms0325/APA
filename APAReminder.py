@@ -10,4 +10,4 @@ class Reminder:
         self.done = True
 
     def snz(self):
-        time.sleep(snooze * 60)
+        time.sleep(self.snooze * 60)
