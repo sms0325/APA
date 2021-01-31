@@ -38,12 +38,12 @@ class GUIPrompt():
         self.root = None
 
     def confirm(self):
-        self.confirmBtn.func()
         self.hide()
+        self.confirmBtn.func()
     
     def cancel(self):
-        self.cancelBtn.func()
         self.hide()
+        self.cancelBtn.func()
 
     def show(self, message, mascot = None):
         if mascot == None:
