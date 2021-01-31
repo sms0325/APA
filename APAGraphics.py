@@ -1,5 +1,6 @@
 import tkinter as tk
 from sys import platform
+import random
 
 class FloatingWindow():
     def __init__(self, window, grip):
@@ -67,17 +68,22 @@ class GUIPrompt():
         grip.image = cherryBoi
         grip.pack()
         
-        underMascot = tk.Frame(self.root, bg="white")
+        backgroundColor = "white"
+        underMascot = tk.Frame(self.root, bg=backgroundColor, borderwidth=5)
         underMascot.pack(fill=tk.X)
         underMascot.columnconfigure(1, weight=1)
-        promptTitle = tk.Label(underMascot, text=self.title, bg="white")
-        promptTitle.grid(column=0, columnspan=3, row=0)
-        promtMessage = tk.Label(underMascot, text=message, bg="white")
-        promtMessage.grid(column=0, columnspan=3, row=1)
+        promptTitle = tk.Label(underMascot, text=self.title, bg=backgroundColor)
+        promptTitle.grid(column=0, columnspan=3, row=0, padx=10)
+        promtMessage = tk.Label(underMascot, text=message, bg=backgroundColor)
+        promtMessage.grid(column=0, columnspan=3, row=1, padx=10)
         confirmButton = tk.Button(underMascot, text=self.confirmBtn.name, command=self.confirm, **self.confirmBtn.style)
-        confirmButton.grid(column=0, row=3)
+        confirmButton.grid(column=0, row=3, padx=5)
         cancelButton = tk.Button(underMascot, text=self.cancelBtn.name, command=self.cancel, **self.cancelBtn.style)
-        cancelButton.grid(column=2, row=3)
+        cancelButton.grid(column=2, row=3, padx=5)
+
+        width = self.root.winfo_screenwidth() - self.root.winfo_reqwidth() - 50
+        height = self.root.winfo_screenheight() - self.root.winfo_reqheight() - 50
+        self.root.geometry(f"+{random.randint(0, width)}+{random.randint(0, height)}")
 
         FloatingWindow(self.root, grip)
         self.root.mainloop()
