@@ -6,10 +6,8 @@ class Reminder:
         self.rtype = rtype
         self.window = window
         self.done = False
-        self.show = True
-    
-    def yes():
+    def yes(self):
         self.done = True
 
-    def snz()
+    def snz(self):
         time.sleep(snooze * 60)
