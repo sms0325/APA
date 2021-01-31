@@ -1,17 +1,8 @@
 import tkinter
 import sqlite3
-#import APA
+import APAMAnager
 
-def setup():
-    name = "TestName"
-        #enter name of file here
-    time = 65137085
-        #in milliseconds
-    #default value for type is reminder (r)
-
-    return name, time
-
-def connectToSQLite_new():
+def connectToSQLite_new(name, time):
     try: 
         conn = sqlite3.connect('APADatabase.db')
         print("Connected!")
@@ -19,12 +10,21 @@ def connectToSQLite_new():
         print("Cannot connect to database.")
     cur = conn.cursor()
 
-    name, time = setup()
-
-    #cur.execute("CREATE TABLE APATable (Name character(100), Time int, Type char)")
+    cur.execute("CREATE TABLE APATable (Name character(100), Time timestamp, Type char)")
     cur.execute("INSERT INTO APATable (Name, Time, Type) VALUES (?, ?, ?)", (name, time, 'r'))
 
     conn.commit()
+    cur.close()
+    conn.close()
+
+def connectToSQLite(name, time, type):
+    try: 
+        conn = sqlite3.connect('APADatabase.db')
+        print("Connected!")
+    except:
+        print("Cannot connect to database.")
+    cur = conn.cursor()
+
     cur.close()
     conn.close()
 
