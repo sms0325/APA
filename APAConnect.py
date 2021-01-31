@@ -21,14 +21,14 @@ def connectToSQLite(name, time, snooze, ID = -1):
     cur = conn.cursor()
 
     if (new):
-        cur.execute("CREATE TABLE IF NOT EXISTS APATable (Name character(50), ID int, Time timestamp, Snooze integer, Type char)")
+        cur.execute("CREATE TABLE IF NOT EXISTS APATable (Name character(50), ID int, Time timestamp, Snooze integer)")
         cur.execute("SELECT * FROM APATable WHERE ID=(SELECT max(ID) FROM APATable)")
         row = cur.fetchone()
         if (row != None):
             ID = cur.fetchone() + 1
         else:
             ID = 0
-        cur.execute("INSERT INTO APATable (Name, ID, Time, Type, Snooze) VALUES (?, ?, ?, ?, ?)", (name, ID, time, snooze, 'r'))
+        cur.execute("INSERT INTO APATable (Name, ID, Time, Snooze) VALUES (?, ?, ?, ?)", (name, ID, time, snooze))
         conn.commit()
         print("New data has been pushed to table!")
         
@@ -40,7 +40,6 @@ def connectToSQLite(name, time, snooze, ID = -1):
         nameCur = row[0]
         IDCur = row[1]
         timeCur = row[2]
-        typeCur = row[3]
         snoozeCur = row[4]
 
         if (name != nameCur):
@@ -49,9 +48,6 @@ def connectToSQLite(name, time, snooze, ID = -1):
         if (time != timeCur):
             cur.execute("UPDATE APATable SET Time = (?) WHERE ID = (?)", (time, IDCur))
             conn.commit()
-        #if (typeCur != 'r'):
-            #cur.execute("UPDATE APATable SET NAME = (?) WHERE ID = (?)", (, IDCur)) 
-        #what to do about file types?
         if (snooze != snoozeCur):
             cur.execute("UPDATE APATable SET Snooze = (?) WHERE ID = (?)", (snooze, IDCur))
             conn.commit()
@@ -88,13 +84,14 @@ def PrintTable(ID):
     conn.commit()
     row = cur.fetchall()
 
+    print("Displaying all tasks in the table")
     for i in row:
         nameCur = row[0 + i]
         IDCur = row[1 + i]
         timeCur = row[2 + i]
-        typeCur = row[3 + i]
         snoozeCur = row[4 + i]
-        print("Data for row " + IDCur + ": Name: " + nameCur + ", Time of reminder: " + timeCur + ", Reminder type: " + typeCur + ", Snooze time set: " + snoozeCur)
+        print("Data for row " + IDCur + ": Name: " + nameCur + ", Time of reminder: " + timeCur + ", Snooze time set: " + snoozeCur)
+        print("----------")
 
     cur.close()
     conn.close()
